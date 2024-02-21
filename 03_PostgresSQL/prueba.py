@@ -1,12 +1,20 @@
 import os
 os.system('cls')
 
+
+
+
 agenda = [
     (34, 'Maxi'),
     (98, 'Sergio'),
     (22, 'Daniel'),
     (83, 'Abel')
 ]
+
+agenda.remove((98, 'Sergio'))
+
+print(agenda)
+
 
 agenda.pop(0)
 print(agenda)
@@ -38,4 +46,7 @@ tup = (34, 'Maxi')
 tup = list(tup)
 
 print(type(tup))
+print(tup)
+
+
 

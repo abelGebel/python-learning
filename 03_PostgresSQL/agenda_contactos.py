@@ -8,14 +8,14 @@ ingresar el teléfono correspondiente.
 ● Buscar: solicitando una cadena de caracteres, y muestra todos los contactos cuyos nombres empiezen 
 por dicha cadena.
 
-● Borrar: solicita un nombre y si existe nos preguntará si queremos borrarlo de la agenda. Si existe más de
-uno debe identificarlos por un número secuencial que permita al usuario identificarlo para realizar la
-operación de borrado 
+● Borrar: solicita un nombre y si existe nos preguntará si queremos borrarlo de la agenda. 
 
 ● Listar: muestra todos los contactos de la agenda.
-Implementar el programa con una lista.'''
+
+Implementar el programa con una lista y una base de datos en postgresql.'''
 
 import os
+import psycopg2
 
 
 def verificarOpcion():
@@ -57,21 +57,19 @@ def verificarNumero():
         else:
             return str(numero)
 
-def anadirModificar():
+def anadirModificar(connection):
 
     while True:
 
         nombre = verificarNombre()
-
         encontrado = False
 
         for i in range(len(agenda)):
-            if agenda[i][1] == nombre:
+            if agenda[i][0] == nombre:
                 encontrado = True
-                numero = agenda[i][0]
+                numero = agenda[i][1]
                 posicion = i
                 break
-
 
         if encontrado:
             print('El nombre ya se encuentra registrado con el numero:')
@@ -79,12 +77,61 @@ def anadirModificar():
             cambio = input('Desea cambiarlo?(s/n)')
             if cambio.lower() == 's':
                 numero = verificarNumero()
-                agenda[posicion][0] = numero
+                agenda[posicion][1] = numero
+
+            # Crear un cursor
+            cursor = connection.cursor()
+
+            # Definir la consulta SQL para actualizar el registro en la tabla
+            sql_update = """UPDATE contacto
+                SET numero = %s
+                WHERE nombre = %s"""
+
+            # Valores para actualizar el registro
+            nuevo_valor_columna1 = numero
+            condicion = nombre
+
+            # Ejecutar la consulta SQL con los valores proporcionados
+            cursor.execute(sql_update, (nuevo_valor_columna1, condicion))
+
+            # Confirmar la transacción
+            connection.commit()
+
+            # Cerrar el cursor y la conexión
+            cursor.close()
+            connection.close()
+                
+
         else:
+
             numero = verificarNumero()
-            contacto = [numero, nombre]
+            contacto = [nombre, numero]
             agenda.append(contacto)
+            agenda.sort()
+
+            # Crear un cursor
+            cursor = connection.cursor()
+
+            # Definir la consulta SQL para insertar un nuevo registro en la tabla
+            sql_insert = """INSERT INTO contacto (nombre, numero)
+            VALUES (%s, %s)"""
+
+            # Valores para el nuevo registro
+            valor_columna1 = nombre
+            valor_columna2 = numero
+
+            # Ejecutar la consulta SQL con los valores proporcionados
+            cursor.execute(sql_insert, (valor_columna1, valor_columna2))
+
+            # Confirmar la transacción
+            connection.commit()
+
+            # Cerrar el cursor
+            cursor.close()
+
             print('Contacto agregado correctamente.')
+
+
         print('')
         continuar = input('Desea continuar?(s/n)')
         os.system('cls')
@@ -104,36 +151,39 @@ def buscar(agenda):
     os.system('cls')
 
 
-def borrar(agenda):
+def borrar(agenda, connection):
     nombre = verificarNombre()
-    lista_aux = []
-    cont = 0
+    
+    encontrado = False
 
     for i in range(len(agenda)):
-        if agenda[i][1] == nombre:
-            lista_aux.append([agenda[i], i])
-            cont += 1
-            
+        if agenda[i][0] == nombre:
+            encontrado = True
+            numero = agenda[i][1]
+            break    
 
-    if cont == 0:
-        print("Nombre no registrado.")
+    if encontrado:
 
-    elif cont == 1:
+        confirmar = input(f"Eliminar contacto {nombre}: {numero} ?(s/n) ")
+        
+        if confirmar.lower() == 's':
 
-        continuar = input(f'Desea eliminar el contacto {lista_aux[0][0]}? (s/n) ')
-        if(continuar.lower() == "s"):
-            agenda.pop(lista_aux[0][1])
+            agenda.remove([nombre, numero])
+
+
+            cursor = connection.cursor()
+            sql_update = """DELETE FROM contacto 
+                WHERE nombre = %s"""
+
+
+            # Ejecutar la consulta SQL con los valores proporcionados
+            cursor.execute(sql_update, (nombre,))
+
+            connection.commit()
+            cursor.close()
 
     else:
-
-        for i in range (len(lista_aux)):
-            print(f"{i}: {lista_aux[i][0]}")
-        contacto_borrar = input("Cual de estos contactos desea borrar? ")
-
-        for i in range (len(lista_aux)):
-            if int(contacto_borrar) == i:
-                agenda.pop(lista_aux[i][1])
-                break
+        print("NOMBRE NO REGISTRADO")
 
     print('')
     continuar = input('(Presione ENTER para continuar)')
@@ -145,43 +195,64 @@ def listar(agenda):
     print('---CONTACTOS---')
     print('')
     for contacto in agenda:
-        print(f"{contacto[1]}: {contacto[0]}")
+        print(f"{contacto[0]}: {contacto[1]}")
     print('')
     continuar = input('(Presione ENTER para continuar)')
     os.system('cls')
 
 
+def cargar_datos(agenda, connection):
+    
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM contacto")
+        rows = cursor.fetchall()
+        for row in rows:
+            registro = list(row)
+            agenda.append(registro)
+
+    except Exception as ex:
+        print(ex)
+
+    agenda.sort()
+    return agenda
 
 
 # Principal----------------------------------------------------------------------------------------
-os.system('cls')
 opcion = 0
-agenda = [
-    ['34', 'm'],
-    ['30', 'm'],
-    ['98', 'Sergio'],
-    ['22', 'Daniel'],
-    ['83', 'Abel'],
-    ['91', 'Marcelo']
-]
+agenda = []
+
+try:
+    connection = psycopg2.connect(
+        host = 'localhost',
+        user = 'postgres',
+        password = 'abel2023Fiunju123',
+        database = 'contacto_db'
+    )
+except Exception as ex:
+    print(ex)
+
+
+agenda = cargar_datos(agenda, connection)
 
 while (True):
     opcion = menu()
 
     if opcion == 1:
-        agenda = anadirModificar()
+        agenda = anadirModificar(connection)
 
     elif opcion == 2:
         buscar(agenda)
 
     elif opcion == 3:
-        agenda = borrar(agenda)
+        agenda = borrar(agenda, connection)
 
     elif opcion == 4:
         listar(agenda)
 
     elif opcion == 5:
         print('Fin registro')
+        connection.close()
         break
 
 
