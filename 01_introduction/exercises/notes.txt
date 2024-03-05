@@ -1,0 +1,9 @@
+variables y funciones: Camel Case
+• constantes: Snake Case
+• Ejemplos
+– Variables:
+• fecha, fechaIngreso, item, costoUnitario
+– Funciones
+• factorial(), calcularPromedio(),
+– Constantes
+• IVA, INTERES_MAXIMO, PLAZO_MINIMO

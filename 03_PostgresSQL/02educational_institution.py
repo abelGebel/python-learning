@@ -16,7 +16,6 @@ Gestionar el listado de notas utilizando una base de datos.
 
 import os
 
-import psycopg2
 
 def verificarOpcion():
     while True:
