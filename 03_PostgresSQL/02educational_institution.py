@@ -15,7 +15,7 @@ Gestionar el listado de notas utilizando una base de datos.
 """
 
 import os
-
+import psycopg2
 
 def verificarOpcion():
     while True:
@@ -107,13 +107,11 @@ def registrar():
 
 def mostrar():
     os.system('cls')
-
     print("")
     print("LISTADO DE ALUMNOS")
     print("")
 
     cursor = connection.cursor()
-
     cursor.execute("SELECT * FROM alumno")
     rows = cursor.fetchall()
     for row in rows:
@@ -148,7 +146,6 @@ def buscar():
     print("")
     continuar = input("(ENTER para continuar)")
     print("")
-
 
 def ordenar():
 
