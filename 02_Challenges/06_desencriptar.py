@@ -7,7 +7,7 @@ patron = "*.pdf"
 
 archivos_pdf = glob.glob(os.path.join(folder, patron))
 
-nueva_contraseña = "nueva_contraseña"
+nueva_contraseña = ""
 
 for archivo_pdf in archivos_pdf:
     reader = PdfReader(archivo_pdf)
@@ -15,7 +15,7 @@ for archivo_pdf in archivos_pdf:
     # Verificar si el archivo PDF ya está cifrado.
     if reader.is_encrypted:
         # Desencriptar el archivo PDF con la contraseña actual.
-        reader.decrypt("password_pdf")
+        reader.decrypt("password")
 
     writer = PdfWriter()
 

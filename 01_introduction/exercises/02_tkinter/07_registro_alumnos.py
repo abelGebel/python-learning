@@ -36,47 +36,42 @@ def ingresarAlumno():
             entry_C.delete(0, tk.END)
             entry_D.delete(0, tk.END)
 
-            promedio = (nota1 +nota2)/2
+            promedio = float((nota1 + nota2)/2)
             resultado = ""
             if promedio < 4:
                 resultado = "INSUFICIENTE"
-            elif promedio == 4 or promedio == 5:
+            elif promedio >= 4 and promedio <= 5:
                 resultado = "SUFICIENTE"
-            elif promedio == 6:
+            elif promedio > 5 and promedio < 7:
                 resultado = "BUENO"
-            elif promedio == 7 or promedio == 8:
+            elif promedio >= 7 and promedio < 9:
                 resultado = "DISTINGUIDO"
             else:
                 resultado = "SOBRESALIENTE"
 
             cursor = connection.cursor()
             # Definir la consulta SQL para actualizar el registro en la tabla
-            sql_insert = """INSERT INTO alumno (dni, nombre, nota) VALUES (%s, %s, %s)"""
+            sql_insert = """INSERT INTO my_table (legajo, nombre, nota1, nota2, promedio, resultado) VALUES (%s, %s, %s, %s, %s, %s)"""
             # Ejecutar la consulta SQL con los valores proporcionados
-            cursor.execute(sql_insert, (dni, nombre, nota))
+            cursor.execute(sql_insert, (legajo, nombre, nota1, nota2, promedio, resultado))
             # Confirmar la transacción
             connection.commit()
             cursor.close()
 
-            registroAlumnos.append([legajo, nombre, nota1, nota2, promedio, resultado])
     except:
         messagebox.showerror("Error", "Ingrese un valor válido.")
-
 
 def mostrarNotas():
     os.system('cls')
     print("")
     print("LISTADO DE ALUMNOS")
     print("")
-
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM alumno")
+    cursor.execute("SELECT * FROM my_table")
     rows = cursor.fetchall()
     for row in rows:
         print(row)
     cursor.close()
-    for reg in registroAlumnos:
-        print(f"Legajo: {reg[0]} Nombre: {reg[1]} Nota 1er parcial: {reg[2]} Nota 2do parcial: {reg[3]} Promedio: {reg[4]} {reg[5]}")
 
 
 # principal-----------------------------------------------------
@@ -90,6 +85,8 @@ try:
     )
 except Exception as ex:
     print(ex)
+
+
 
 root = tk.Tk()
 root.title("Registro")
@@ -127,5 +124,5 @@ btn_promedio.grid(row=4, column=1, padx=5, pady=5)
 root.mainloop()
 
 
-#connection.close()
+connection.close()
 

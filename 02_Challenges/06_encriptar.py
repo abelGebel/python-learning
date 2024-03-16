@@ -2,7 +2,6 @@
 Enuncuado:
 En una carpeta que contiene ficheros .pdf, proteger cada fichero con una contraseña.
 """
-
 import os # Para trabajar con rutas de archivos.
 import glob # Para buscar archivos o directorios que coincidad con un patron especifico.
 from PyPDF2 import PdfReader, PdfWriter

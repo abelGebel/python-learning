@@ -1,4 +1,4 @@
-# Calcule el perímetro y la superficie de un rectángulo solicitando al 
+# Calcule el perímetro y la superficie de un triangulo solicitando al 
 # usuario la longitud de sus lados. 
 import math
 import os

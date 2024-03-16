@@ -38,14 +38,3 @@ def verificar_delimitacion(expresion):
 expresion = '(a+b)'
 
 print(verificar_delimitacion(expresion))  # Output: True
-
-
-
-
-# Ejemplo de uso
-cadena = "Esto es una {prueba} [con] (caracteres) no deseados!"
-cadena_limpia = eliminar_no_deseados(cadena)
-print(cadena_limpia)
-
-
-

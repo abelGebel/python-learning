@@ -12,6 +12,8 @@
 
 import string
 
+# string.punctuation = !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+
 def contar_palabras(texto):
     # Eliminar signos de puntuación y dividir el texto en palabras
     palabras = texto.translate(str.maketrans('', '', string.punctuation)).lower().split()
@@ -37,5 +39,8 @@ Una palabra es la misma aunque aparezca en mayúsculas y minúsculas.
 No se pueden utilizar funciones propias del lenguaje que
 lo resuelvan automáticamente.
 """
+
+
+
 
 contar_palabras(texto)

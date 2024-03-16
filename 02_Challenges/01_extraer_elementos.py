@@ -1,7 +1,7 @@
 """
 Enunciado:
-Dada una lista de 1000000 de elementos, extraer uno a uno los primetor 100000 elementos praa un posterior analis
-en menos de 1 segundo.
+Dada una lista de 1000000 de elementos, extraer uno a uno los primetor 100000 elementos 
+praa un posterior analisis en menos de 1 segundo.
 """
 
 import time
@@ -23,7 +23,8 @@ print("Tiempo transcurrido: {:.2f} segundos".format(round(end_time - start_time,
 
 
 """
-Deque está optimizado para la inserción y eliminación eficiente tanto al principio como al final de la cola. 
-Internamente, deque utiliza una estructura de datos de doble enlace, lo que permite eliminar elementos al 
-principio de la cola sin necesidad de mover todos los elementos restantes.
+Deque está optimizado para la inserción y eliminación eficiente tanto al principio 
+como al final de la cola. Internamente, deque utiliza una estructura de datos de 
+doble enlace, lo que permite eliminar elementos al principio de la cola sin necesidad 
+de mover todos los elementos restantes.
 """

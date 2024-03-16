@@ -15,12 +15,18 @@ ingresado = 0
 retirado = 0
 
 def ingresar():
-    global stock, ingresado
-    cantidadAIngresar = int(entry_A.get())
-    stock += cantidadAIngresar
-    ingresado += cantidadAIngresar
-    entry_A.delete(0, tk.END)  # Limpiar el campo de entrada
-    label_A.config(text=f"Cantidad de cajones: {stock}")
+    try:
+        global stock, ingresado
+        cantidadAIngresar = int(entry_A.get())
+        stock += cantidadAIngresar
+        ingresado += cantidadAIngresar
+        entry_A.delete(0, tk.END)  # Limpiar el campo de entrada
+        label_A.config(text=f"Cantidad de cajones: {stock}")
+
+    except ValueError:
+        messagebox.showerror("Error", "Ingrese un valor válido.")
+
+
 
 
 def retirar():
